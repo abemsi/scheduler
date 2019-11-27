@@ -1,30 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import "components/Application.scss";
 
 import DayList from "components/DayList";
 
+import Appointment from "components/Appointment";
 
-const days = [
+const appointments = [
   {
     id: 1,
-    name: "Monday",
-    spots: 2,
+    time: "12pm",
   },
   {
     id: 2,
-    name: "Tuesday",
-    spots: 5,
+    time: "1pm",
+    interview: {
+      student: "Lydia Miller-Jones",
+      interviewer: {
+        id: 1,
+        name: "Sylvia Palmer",
+        avatar: "https://i.imgur.com/LpaY82x.png",
+      }
+    }
   },
   {
     id: 3,
-    name: "Wednesday",
-    spots: 0,
+    time: "2pm",
   },
+  {
+    id: 4,
+    time: "3pm",
+    interview: {
+      student: "Joseph Brown",
+      interviewer: {
+        id: 5,
+        name: "Sven Jones",
+        avatar: "https://i.imgur.com/twYrpay.jpg",
+      }
+    }
+  },
+  {
+    id: 5,
+    time: "4pm",
+    interview: {
+      student: "Alice Hill",
+      interviewer: {
+        id: 3,
+        name: "Mildred Nazir",
+        avatar: "https://i.imgur.com/T2WwVfS.png",
+      }
+    }
+  }
 ];
 
+// const days = [
+//   {
+//     id: 1,
+//     name: "Monday",
+//     spots: 2,
+//   },
+//   {
+//     id: 2,
+//     name: "Tuesday",
+//     spots: 5,
+//   },
+//   {
+//     id: 3,
+//     name: "Wednesday",
+//     spots: 0,
+//   },
+// ];
+
 export default function Application(props) {
-  const [day, setDay] = useState("Monday");
+  const [day, setDay] = useState("");
+  const [days, setDays] = useState([]);
+  const timeslot = appointments.map(appointment => <Appointment key={appointment.id} {...appointment}/> );
+
+  // useEffect(() => {
+  //   axios.get(`/api/days`)
+  //   .then((response) => {
+  //     console.log(response);
+  //     setDays(response.data.results)
+  //   })
+  //   .catch((error) => {
+  //     console.log(error.response.status);
+  //     console.log(error.response.headers);
+  //     console.log(error.response.data);
+  //   })
+  // }, [])
 
   return (
     <main className="layout">
@@ -49,7 +113,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+        {timeslot}
       </section>
     </main>
   );
