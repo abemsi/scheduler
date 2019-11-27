@@ -39,6 +39,7 @@ import ErrorDeleting from "components/Appointment/ErrorDeleting";
 
 import ErrorSaving from "components/Appointment/ErrorSaving";
 
+import Form from "components/Appointment/Form";
 
 storiesOf("Button", module)
   .addParameters({
@@ -183,4 +184,16 @@ storiesOf("Appointment", module)
   .add("ErrorSaving", () => <ErrorSaving
     message="Could not save appointment."
     onClose={action("onClose")}
+  />)
+  .add("Edit", () => <Form 
+    name="Lydia Miller-Jones"
+    interviewers={interviewers}
+    interviewer={3}
+    onSave={action("onSave")}
+    onCancel={action("onCancel")}
+  />)
+  .add("Create", () => <Form 
+    interviewers={interviewers}
+    onSave={action("onSave")}
+    onCancel={action("onCancel")}
   />)
