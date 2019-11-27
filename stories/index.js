@@ -1,5 +1,5 @@
 /* We need to import React because we are using JSX. */
-import React from "react";
+import React, { Fragment } from "react";
 
 /* The storiesOf function from the React version of Storybook is used to start a series of stories. */
 import { storiesOf } from "@storybook/react";
@@ -197,3 +197,19 @@ storiesOf("Appointment", module)
     onSave={action("onSave")}
     onCancel={action("onCancel")}
   />)
+  .add("Appointment Empty", () => (
+    <Fragment>
+      <Appointment id={1} time="12pm" />
+      <Appointment id="last" time="1pm" />
+    </Fragment>
+  ))
+  .add("Appointment Booked", () => (
+    <Fragment>
+      <Appointment
+        id={1}
+        time="12pm"
+        interview={{ student: "Lydia Miller-Jones", interviewer }}
+      />
+      <Appointment id="last" time="1pm" />
+    </Fragment>
+  ))
