@@ -2,57 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import "components/Application.scss";
-
 import DayList from "components/DayList";
-
 import Appointment from "components/Appointment";
-
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  {
-    id: 3,
-    time: "2pm",
-  },
-  {
-    id: 4,
-    time: "3pm",
-    interview: {
-      student: "Joseph Brown",
-      interviewer: {
-        id: 5,
-        name: "Sven Jones",
-        avatar: "https://i.imgur.com/twYrpay.jpg",
-      }
-    }
-  },
-  {
-    id: 5,
-    time: "4pm",
-    interview: {
-      student: "Alice Hill",
-      interviewer: {
-        id: 3,
-        name: "Mildred Nazir",
-        avatar: "https://i.imgur.com/T2WwVfS.png",
-      }
-    }
-  }
-];
+import getAppointmentsForDay from "../helpers/selectors.js";
 
 export default function Application(props) {
 
@@ -63,19 +15,21 @@ export default function Application(props) {
   });
 
   const setDay = day => setState({ ...state, day});
-  const setDays = days => setState(prev => ({...prev, days}));
-
-  const timeslot = appointments.map(appointment => <Appointment key={appointment.id} {...appointment}/> );
+  
+  const timeslot = getAppointmentsForDay(state, state.day).map(appointment => <Appointment key={appointment.id} {...appointment}/> );
 
   useEffect(() => {
-    axios.get(`/api/days`)
-    .then((response) => {
-      console.log(response);
-      setDays(response.data)
-    })
-    .catch((error) => {
-      console.log(error.response);
-    })
+    const promise1 = axios.get(`/api/days`);
+    const promise2 = axios.get(`/api/appointments`);
+
+    Promise.all([promise1, promise2])
+      .then((all) => {
+      console.log(all)
+      setState(prev => ({ days: all[0].data, appointments: all[1].data })); 
+      })
+      .catch((error) => {
+        console.log(error.response);
+      })
   }, [])
 
   return (
