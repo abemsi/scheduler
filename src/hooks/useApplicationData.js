@@ -31,8 +31,9 @@ export default function useApplicationData() {
         }
       case SET_INTERVIEW:
         return {
-          ...state.appointments,
-          [action.id]: { ...action.interview }
+          ...state,
+          appointments: action.appointments,
+          days: action.days
         }
       case SET_SPOTS:
         return {
@@ -44,8 +45,7 @@ export default function useApplicationData() {
           `Tried to reduce with unsupported action type: ${action.type}`
         )
     }
-  }
-          
+  }     
 
   const setDay = day => dispatch({ type: SET_DAY, day});
 
@@ -73,17 +73,14 @@ export default function useApplicationData() {
       ...state.appointments[id],
       interview: { ...interview }
     };
-    const subtractSpots = () => {
-      
-    }
     return axios.put(`/api/appointments/${id}`, appointment)
     .then((res) => {
       const appointments = {
         ...state.appointments,
         [id]: appointment
       };
-        dispatch({ type: SET_INTERVIEW, appointments });
-        dispatch({ type: SET_SPOTS, appointments });
+      const days = updateSpot(state.day, -1)
+        dispatch({ type: SET_INTERVIEW, appointments, days });
       })
   }
 
@@ -92,18 +89,26 @@ export default function useApplicationData() {
       ...state.appointments[id],
       interview: null
     };
-    const addSpots = () => {
-      
-    }
     return axios.delete(`/api/appointments/${id}`)
     .then((res) => {
       const appointments = {
         ...state.appointments,
         [id]: appointment
       };
-        dispatch({ type: SET_INTERVIEW, appointments });
-        dispatch({ type: SET_SPOTS, appointments });
+      const days = updateSpot(state.day, 1)
+        dispatch({ type: SET_INTERVIEW, appointments, days });
     })
+  }
+
+  function updateSpot(day, action) {
+    const foundDayIndex = state.days.findIndex(currentDay => currentDay.name === day);
+    const findDay = state.days[foundDayIndex];
+    findDay.spots = findDay.spots + action;
+    const updatedDays = [
+      ...state.days
+    ]
+    updatedDays[foundDayIndex] = findDay;
+    return updatedDays;
   }
 
   return { state, setDay, bookInterview, cancelInterview };
