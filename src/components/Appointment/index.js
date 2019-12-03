@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 
 import "components/Appointment/styles.scss";
 
@@ -59,7 +59,7 @@ export default function Appointment(props) {
   }
 
   return (
-    <Fragment>
+    <article data-testid="appointment">
       <Header time={props.time} />
         {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
         {mode === SHOW && (
@@ -99,7 +99,7 @@ export default function Appointment(props) {
           message="Could not delete appointment."
           onClose={() => transition(SHOW)}
         />}
-    </Fragment>
+    </article>
   );
 
 }
